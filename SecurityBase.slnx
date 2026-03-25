@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Backend/">
+    <Project Path="Backend/SecurityBase.Api/SecurityBase.Api.csproj" />
+    <Project Path="Backend/SecurityBase.Core/SecurityBase.Core.csproj" />
+    <Project Path="Backend/SecurityBase.Infrastructure/SecurityBase.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Frontend/">
+    <Project Path="Frontend/SecurityBase.Mvc/SecurityBase.Mvc.csproj" />
+  </Folder>
+</Solution>
