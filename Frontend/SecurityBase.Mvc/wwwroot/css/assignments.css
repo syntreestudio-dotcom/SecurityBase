@@ -1,0 +1,157 @@
+/* Assignments pages (UserRoles/RoleMenus) - match grid/table pages */
+.grid-page > .row.sb-assignment-body {
+    /* Override grid.css default `.grid-page > .row { flex: 0 0 auto; }` */
+    flex: 1 1 auto;
+    min-height: 0;
+    /* Override grid.css `align-items: center` so columns stretch full height */
+    align-items: stretch !important;
+}
+
+.grid-page > .row.sb-assignment-body > [class^="col-"],
+.grid-page > .row.sb-assignment-body > [class*=" col-"] {
+    min-height: 0;
+}
+
+.sb-assignment-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.sb-assignment-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    color: #0f172a;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.sb-assignment-card-title i {
+    color: var(--sb-form-accent, #2575fc);
+}
+
+.sb-assignment-selected-user {
+    color: var(--sb-form-accent, #2575fc);
+}
+
+.sb-assignment-user-row {
+    cursor: pointer;
+}
+
+.sb-assignment-user-row.sb-selected td:first-child {
+    position: relative;
+}
+
+.sb-assignment-user-row.sb-selected td:first-child::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--sb-form-accent, #2575fc);
+}
+
+.sb-assignment-user-row.sb-selected {
+    background: #f8fafc;
+}
+
+.sb-assignment-placeholder {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 28px;
+    color: #64748b;
+}
+
+.sb-assignment-placeholder .icon {
+    font-size: 52px;
+    color: #94a3b8;
+    margin-bottom: 12px;
+}
+
+.sb-assignment-switch {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.sb-assignment-switch .form-check-input {
+    cursor: pointer;
+    margin: 0;
+}
+
+.sb-userroles-panels {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sb-userroles-row {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.sb-assignment-role-row {
+    cursor: pointer;
+}
+
+.sb-assignment-role-row:hover {
+    background: #f8fafc;
+}
+
+.sb-assignment-role-row.sb-selected td:first-child {
+    position: relative;
+}
+
+.sb-assignment-role-row.sb-selected td:first-child::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--sb-form-accent, #2575fc);
+}
+
+.sb-assignment-role-row.sb-selected {
+    background: #f8fafc;
+}
+
+.sb-assignment-switch.sb-radio {
+    justify-content: flex-end;
+}
+
+.sb-assignment-switch.sb-radio .form-check-input[type="radio"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    border-color: #cbd5e1;
+}
+
+.sb-assignment-switch.sb-radio .form-check-input[type="radio"]:checked {
+    border-color: var(--sb-form-accent, #2575fc);
+    background-color: var(--sb-form-accent, #2575fc);
+}
+
+@media (max-width: 768px) {
+    .sb-assignment-card-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sb-assignment-card-title {
+        justify-content: center;
+    }
+}

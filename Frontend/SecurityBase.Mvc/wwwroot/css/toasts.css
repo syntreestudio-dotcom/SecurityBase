@@ -1,0 +1,116 @@
+.sb-toast-container {
+    z-index: 2000;
+}
+
+.sb-confirm-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(2px);
+    z-index: 2000;
+}
+
+.sb-confirm-backdrop.active {
+    display: block;
+}
+
+.sb-confirm-container {
+    z-index: 2001;
+    width: min(420px, calc(100vw - 24px));
+}
+
+.sb-confirm-container .sb-toast {
+    width: 100%;
+}
+
+.sb-toast {
+    width: 360px;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+    overflow: hidden;
+}
+
+.sb-toast-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    padding: 10px 12px;
+}
+
+.sb-toast-title {
+    font-weight: 800;
+    color: #0f172a;
+    font-size: 0.95rem;
+}
+
+.sb-toast-body {
+    background: transparent;
+    color: #334155;
+    font-weight: 600;
+    padding: 10px 12px 12px 12px;
+}
+
+.sb-toast-message {
+    font-weight: 600;
+    color: #334155;
+}
+
+.sb-toast-icon {
+    margin-right: 10px;
+    font-size: 1.05rem;
+}
+
+.sb-toast-icon-success { color: #16a34a; }
+.sb-toast-icon-info { color: #2563eb; }
+.sb-toast-icon-warning { color: #d97706; }
+.sb-toast-icon-error { color: #dc2626; }
+.sb-toast-icon-confirm { color: #6b7280; }
+
+.sb-toast-success {
+    border-left: 4px solid #16a34a;
+    background: #f0fdf4;
+}
+.sb-toast-info {
+    border-left: 4px solid #2563eb;
+    background: #eff6ff;
+}
+.sb-toast-warning {
+    border-left: 4px solid #d97706;
+    background: #fffbeb;
+}
+.sb-toast-error {
+    border-left: 4px solid #dc2626;
+    background: #fef2f2;
+}
+.sb-toast-confirm {
+    border-left: 4px solid #6b7280;
+    background: #ffffff;
+}
+
+.sb-toast-confirm.sb-toast-confirm-danger {
+    border-left-color: #dc2626;
+}
+
+.sb-confirm-container .sb-toast-header {
+    padding: 12px 14px;
+}
+
+.sb-confirm-container .sb-toast-body {
+    padding: 12px 14px 14px 14px;
+}
+
+.sb-confirm-container .sb-toast-title {
+    font-size: 1.0rem;
+}
+
+.sb-toast-actions .btn {
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+@media (max-width: 576px) {
+    .sb-toast {
+        width: min(360px, calc(100vw - 24px));
+    }
+}

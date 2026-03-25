@@ -1,1 +1,50 @@
-new
+# OS
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# IDEs / editors
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.slnLaunch.user
+
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+**/TestResults/
+**/*.tmp
+**/*.cache
+
+# NuGet
+**/packages/
+*.nupkg
+*.snupkg
+
+# ASP.NET Core / secrets / certs (local only)
+**/appsettings.*.Development.json
+**/appsettings.*.Local.json
+**/secrets.json
+**/*.pfx
+**/*.p12
+
+# Logs / diagnostic artifacts
+*.log
+*.trace
+api_build*.log
+api_build*.txt
+api_build_errors*.txt
+api_err*.txt
+api_logs*.txt
+build_output*.txt
+build_errors*.txt
+
+# Local scratch folders
+_buildtmp/
+testjwt/
+DatabaseScripts/

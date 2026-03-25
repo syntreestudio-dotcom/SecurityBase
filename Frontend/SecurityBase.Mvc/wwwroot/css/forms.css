@@ -1,0 +1,469 @@
+:root {
+    /* Match project palette (see site.css / sidebar) */
+    --sb-form-accent: #2575fc;
+    --sb-form-accent-2: #6a11cb;
+    /* Professional, low-contrast bars (no gradients) */
+    --sb-form-header-bg: #ffffff;
+    --sb-form-footer-bg: #f1f5f9;
+    --sb-form-bar-border: #e2e8f0;
+
+    /* Modal vertical positioning (top gap) */
+    --sb-modal-top-gap: 72px;
+}
+
+.sb-form {
+}
+
+.sb-form .form-section {
+    background: #ffffff;
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.sb-form .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--sb-form-accent);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e6ed;
+    letter-spacing: -0.2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sb-form .section-icon {
+    font-size: 16px;
+    color: var(--sb-form-accent);
+}
+
+.sb-form .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #344054;
+    margin-bottom: 6px;
+    letter-spacing: -0.1px;
+}
+
+.sb-form .input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.sb-form .input-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--sb-form-accent);
+    font-size: 14px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.sb-form .input-with-icon .form-control,
+.sb-form .input-with-icon .form-select,
+.sb-form .input-with-icon textarea.form-control {
+    padding-left: 38px;
+}
+
+.sb-form .form-control,
+.sb-form .form-select {
+    font-size: 13px;
+    padding: 9px 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    transition: all 0.2s;
+    background: #ffffff;
+    color: #101828;
+    width: 100%;
+}
+
+.sb-form textarea.form-control {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.sb-form .form-control:focus,
+.sb-form .form-select:focus {
+    border-color: var(--sb-form-accent);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
+    outline: none;
+    background: #ffffff;
+}
+
+.sb-form .form-control::placeholder {
+    color: #98a2b3;
+    font-size: 12px;
+}
+
+.sb-form-modal-header {
+    background-color: var(--sb-form-header-bg) !important;
+    background-image: none !important;
+    color: #0f172a;
+    border-bottom: 0;
+    padding: 14px 18px;
+    position: relative;
+    z-index: 2;
+    /* Header: subtle separation into body */
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08), inset 0 -1px 0 rgba(148, 163, 184, 0.22) !important;
+    border-bottom: 1px solid var(--sb-form-bar-border);
+}
+
+.sb-form-modal-body {
+    background: #f8fafc;
+    position: relative;
+    z-index: 1;
+}
+
+.sb-form-modal-body .form-section {
+    background: #fff;
+}
+
+.sb-modal .modal-dialog {
+    margin-top: var(--sb-modal-top-gap) !important;
+}
+
+.sb-modal .modal-dialog.modal-dialog-centered {
+    /* Override Bootstrap centering so dialogs respect the top gap */
+    align-items: flex-start !important;
+}
+
+@media (max-width: 576px) {
+    :root {
+        --sb-modal-top-gap: 56px;
+    }
+}
+
+.sb-confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 2000;
+}
+
+.sb-confirm-dialog {
+    width: 100%;
+    max-width: 440px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.24);
+    overflow: hidden;
+}
+
+.sb-confirm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.sb-confirm-title {
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.2px;
+    font-size: 14px;
+}
+
+.sb-confirm-close {
+    border: none;
+    background: transparent;
+    color: #334155;
+    font-size: 22px;
+    line-height: 1;
+    padding: 0 4px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.sb-confirm-close:hover {
+    opacity: 1;
+}
+
+.sb-confirm-message {
+    padding: 14px;
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.sb-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}
+
+.sb-confirm-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sb-confirm-btn-secondary {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.sb-confirm-btn-secondary:hover {
+    background: #cbd5e1;
+}
+
+.sb-confirm-btn-danger {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.sb-confirm-btn-danger:hover {
+    background: #b91c1c;
+}
+
+.sb-invalid-feedback {
+    margin-top: 6px;
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.sb-password-meter {
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.sb-password-meter-bar {
+    height: 100%;
+    width: 0%;
+    background: #ef4444;
+    transition: width 180ms ease, background-color 180ms ease;
+}
+
+.sb-password-meter-bar[data-score="0"],
+.sb-password-meter-bar[data-score="1"] {
+    background: #ef4444;
+}
+
+.sb-password-meter-bar[data-score="2"] {
+    background: #f59e0b;
+}
+
+.sb-password-meter-bar[data-score="3"] {
+    background: #22c55e;
+}
+
+.sb-password-meter-bar[data-score="4"] {
+    background: #16a34a;
+}
+
+.sb-password-text {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.sb-info-icon {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin-left: 6px;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.sb-info-icon:hover {
+    color: #334155;
+}
+
+.sb-info-icon:focus {
+    outline: none;
+}
+
+.sb-form-modal-header .modal-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+
+.sb-form-modal-subtitle {
+    margin-top: 2px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.sb-form-modal-header .btn-close {
+    opacity: 0.7;
+}
+
+.sb-form-modal-header .btn-close:hover {
+    opacity: 0.95;
+}
+
+.sb-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--sb-form-bar-border);
+    background-color: var(--sb-form-footer-bg) !important;
+    background-image: none !important;
+    position: relative;
+    z-index: 2;
+    /* Footer: subtle separation from body */
+    box-shadow: 0 -3px 8px rgba(15, 23, 42, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Save button (Uiverse-inspired) */
+.sb-form .btn-save {
+    position: relative;
+    border: none;
+    background: transparent;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;
+    height: 34px;
+}
+
+.sb-form .btn-save .shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    transform: translateY(2px);
+    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.sb-form .btn-save .edge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(to left, hsl(145, 50%, 25%) 0%, hsl(145, 50%, 35%) 8%, hsl(145, 50%, 35%) 92%, hsl(145, 50%, 25%) 100%);
+}
+
+.sb-form .btn-save .front {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 22px;
+    font-size: 12px;
+    color: white;
+    background: hsl(145, 63%, 42%);
+    border-radius: 10px;
+    transform: translateY(-4px);
+    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    height: 34px;
+}
+
+.sb-form .btn-save:hover .shadow {
+    transform: translateY(4px);
+    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+}
+
+.sb-form .btn-save:hover .front {
+    transform: translateY(-6px);
+    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+}
+
+.sb-form .btn-save:active .shadow {
+    transform: translateY(1px);
+    transition: transform 34ms;
+}
+
+.sb-form .btn-save:active .front {
+    transform: translateY(-2px);
+    transition: transform 34ms;
+}
+
+.sb-form .btn-save .front span {
+    user-select: none;
+}
+
+/* Cancel button (Uiverse-inspired) */
+.sb-form .btn-cancel {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: #183153;
+    font-family: inherit;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    height: 34px;
+    min-width: 120px;
+}
+
+.sb-form .btn-cancel:after {
+    content: " ";
+    width: 0%;
+    height: 100%;
+    background: #dc2626;
+    position: absolute;
+    transition: all 0.35s ease-in-out;
+    right: 0;
+}
+
+.sb-form .btn-cancel:hover::after {
+    right: auto;
+    left: 0;
+    width: 100%;
+}
+
+.sb-form .btn-cancel span {
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    padding: 8px 12px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    z-index: 2;
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+    .sb-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .sb-form .btn-cancel,
+    .sb-form .btn-save {
+        width: 100%;
+    }
+}
