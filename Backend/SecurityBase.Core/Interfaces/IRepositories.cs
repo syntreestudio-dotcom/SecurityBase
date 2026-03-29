@@ -29,6 +29,23 @@ public interface IMenuRepository
     Task<int> DeleteMenuAsync(int menuId);
 }
 
+public interface ICategoryTypeRepository
+{
+    Task<int> CreateCategoryTypeAsync(CategoryType categoryType);
+    Task<IEnumerable<CategoryType>> GetCategoryTypesAsync();
+    Task<int> UpdateCategoryTypeAsync(CategoryType categoryType);
+    Task<int> DeleteCategoryTypeAsync(int categoryTypeId);
+}
+
+public interface ICategoryRepository
+{
+    Task<int> CreateCategoryAsync(Category category);
+    Task<IEnumerable<CategoryDto>> GetCategoriesAsync();
+    Task<IEnumerable<DropdownItemDto>> GetCategoryOptionsByTypeAsync(string categoryTypeName);
+    Task<int> UpdateCategoryAsync(Category category);
+    Task<int> DeleteCategoryAsync(int categoryId);
+}
+
 public interface IAssignmentRepository
 {
     Task AssignRoleToUserAsync(int userId, int roleId);

@@ -214,7 +214,7 @@
 
         var route = (routeEl && routeEl.value) ? String(routeEl.value).trim() : '';
         if (!isEmpty(route) && route[0] !== '/') {
-            setError(routeEl, 'Route should start with “/” (example: /Users/Index).');
+            setError(routeEl, 'Route should start with “/” (example: /Security/Users/Index).');
         } else if (!isEmpty(route) && route.length > 120) {
             setError(routeEl, 'Route is too long (max 120).');
         }
@@ -252,11 +252,99 @@
         return ok;
     }
 
+    function validateCategoryTypeForm() {
+        var formEl = document.getElementById('categoryTypeForm');
+        if (!formEl) return true;
+        clearErrors(formEl);
+
+        var nameEl = document.getElementById('categoryTypeName');
+        var descEl = document.getElementById('categoryTypeDescription');
+        var orderEl = document.getElementById('categoryTypeDisplayOrder');
+
+        var name = (nameEl && nameEl.value) ? String(nameEl.value).trim() : '';
+        if (isEmpty(name)) {
+            setError(nameEl, 'Type name is required.');
+        } else if (name.length < 2 || name.length > 60) {
+            setError(nameEl, 'Type name must be 2–60 characters.');
+        }
+
+        var desc = (descEl && descEl.value) ? String(descEl.value).trim() : '';
+        if (!isEmpty(desc) && desc.length > 250) {
+            setError(descEl, 'Description must be 250 characters or less.');
+        }
+
+        var orderRaw = orderEl ? orderEl.value : '';
+        if (!isEmpty(orderRaw)) {
+            if (!isInt(orderRaw)) {
+                setError(orderEl, 'Display order must be an integer.');
+            } else {
+                var n = parseIntSafe(orderRaw);
+                if (n == null || n < 0 || n > 9999) setError(orderEl, 'Display order must be between 0 and 9999.');
+            }
+        }
+
+        var ok = qsa(formEl, '.is-invalid').length === 0;
+        if (!ok) focusFirstInvalid(formEl);
+        return ok;
+    }
+
+    function validateCategoryForm() {
+        var formEl = document.getElementById('categoryForm');
+        if (!formEl) return true;
+        clearErrors(formEl);
+
+        var nameEl = document.getElementById('categoryName');
+        var typeEl = document.getElementById('categoryTypeId');
+        var codeEl = document.getElementById('categoryCode');
+        var descEl = document.getElementById('categoryDescription');
+        var orderEl = document.getElementById('categoryDisplayOrder');
+
+        var name = (nameEl && nameEl.value) ? String(nameEl.value).trim() : '';
+        if (isEmpty(name)) {
+            setError(nameEl, 'Category name is required.');
+        } else if (name.length < 2 || name.length > 80) {
+            setError(nameEl, 'Category name must be 2–80 characters.');
+        }
+
+        var typeVal = (typeEl && typeEl.value) ? String(typeEl.value).trim() : '';
+        if (isEmpty(typeVal)) {
+            setError(typeEl, 'Category type is required.');
+        } else if (!isInt(typeVal)) {
+            setError(typeEl, 'Category type is invalid.');
+        }
+
+        var code = (codeEl && codeEl.value) ? String(codeEl.value).trim() : '';
+        if (!isEmpty(code) && code.length > 30) {
+            setError(codeEl, 'Code must be 30 characters or less.');
+        }
+
+        var desc = (descEl && descEl.value) ? String(descEl.value).trim() : '';
+        if (!isEmpty(desc) && desc.length > 250) {
+            setError(descEl, 'Description must be 250 characters or less.');
+        }
+
+        var orderRaw = orderEl ? orderEl.value : '';
+        if (!isEmpty(orderRaw)) {
+            if (!isInt(orderRaw)) {
+                setError(orderEl, 'Display order must be an integer.');
+            } else {
+                var n = parseIntSafe(orderRaw);
+                if (n == null || n < 0 || n > 9999) setError(orderEl, 'Display order must be between 0 and 9999.');
+            }
+        }
+
+        var ok = qsa(formEl, '.is-invalid').length === 0;
+        if (!ok) focusFirstInvalid(formEl);
+        return ok;
+    }
+
     window.SBFormValidation = {
         clearErrors: clearErrors,
         validateUserForm: validateUserForm,
         validateRoleForm: validateRoleForm,
         validateMenuForm: validateMenuForm,
+        validateCategoryTypeForm: validateCategoryTypeForm,
+        validateCategoryForm: validateCategoryForm,
         passwordStrength: passwordStrength,
         updatePasswordMeter: updatePasswordMeter
     };

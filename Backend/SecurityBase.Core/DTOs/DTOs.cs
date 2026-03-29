@@ -40,6 +40,34 @@ public class RoleDto
     public string? Description { get; set; }
 }
 
+public class DropdownItemDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Code { get; set; }
+}
+
+public class CategoryTypeDto
+{
+    public int CategoryTypeId { get; set; }
+    public string CategoryTypeName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public bool IsActive { get; set; }
+    public int DisplayOrder { get; set; }
+}
+
+public class CategoryDto
+{
+    public int CategoryId { get; set; }
+    public int CategoryTypeId { get; set; }
+    public string CategoryTypeName { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
+    public string? Code { get; set; }
+    public string? Description { get; set; }
+    public bool IsActive { get; set; }
+    public int DisplayOrder { get; set; }
+}
+
 public class ApiResponse<T>
 {
     public bool Success { get; set; }

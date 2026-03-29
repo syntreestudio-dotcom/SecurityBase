@@ -181,6 +181,145 @@ END
 GO
 
 -------------------------------------------------------------------------------
+-- CATEGORY TYPE PROCEDURES
+-------------------------------------------------------------------------------
+
+-- sp_CreateCategoryType
+CREATE OR ALTER PROCEDURE sp_CreateCategoryType
+    @CategoryTypeName NVARCHAR(100),
+    @Description NVARCHAR(255),
+    @IsActive BIT,
+    @DisplayOrder INT
+AS
+BEGIN
+    INSERT INTO CategoryTypes (CategoryTypeName, Description, IsActive, DisplayOrder, CreatedDate)
+    VALUES (@CategoryTypeName, @Description, @IsActive, @DisplayOrder, GETDATE());
+    SELECT SCOPE_IDENTITY() AS CategoryTypeId;
+END
+GO
+
+-- sp_GetCategoryTypes
+CREATE OR ALTER PROCEDURE sp_GetCategoryTypes
+AS
+BEGIN
+    SELECT * FROM CategoryTypes ORDER BY DisplayOrder, CategoryTypeName;
+END
+GO
+
+-- sp_UpdateCategoryType
+CREATE OR ALTER PROCEDURE sp_UpdateCategoryType
+    @CategoryTypeId INT,
+    @CategoryTypeName NVARCHAR(100),
+    @Description NVARCHAR(255),
+    @IsActive BIT,
+    @DisplayOrder INT
+AS
+BEGIN
+    UPDATE CategoryTypes
+    SET CategoryTypeName = @CategoryTypeName,
+        Description = @Description,
+        IsActive = @IsActive,
+        DisplayOrder = @DisplayOrder
+    WHERE CategoryTypeId = @CategoryTypeId;
+END
+GO
+
+-- sp_DeleteCategoryType
+CREATE OR ALTER PROCEDURE sp_DeleteCategoryType
+    @CategoryTypeId INT
+AS
+BEGIN
+    DELETE FROM Categories WHERE CategoryTypeId = @CategoryTypeId;
+    DELETE FROM CategoryTypes WHERE CategoryTypeId = @CategoryTypeId;
+END
+GO
+
+-------------------------------------------------------------------------------
+-- CATEGORY PROCEDURES
+-------------------------------------------------------------------------------
+
+-- sp_CreateCategory
+CREATE OR ALTER PROCEDURE sp_CreateCategory
+    @CategoryTypeId INT,
+    @CategoryName NVARCHAR(150),
+    @Code NVARCHAR(30),
+    @Description NVARCHAR(255),
+    @IsActive BIT,
+    @DisplayOrder INT
+AS
+BEGIN
+    INSERT INTO Categories (CategoryTypeId, CategoryName, Code, Description, IsActive, DisplayOrder, CreatedDate)
+    VALUES (@CategoryTypeId, @CategoryName, @Code, @Description, @IsActive, @DisplayOrder, GETDATE());
+    SELECT SCOPE_IDENTITY() AS CategoryId;
+END
+GO
+
+-- sp_GetCategories
+CREATE OR ALTER PROCEDURE sp_GetCategories
+AS
+BEGIN
+    SELECT c.CategoryId,
+           c.CategoryTypeId,
+           ct.CategoryTypeName,
+           c.CategoryName,
+           c.Code,
+           c.Description,
+           c.IsActive,
+           c.DisplayOrder
+    FROM Categories c
+    JOIN CategoryTypes ct ON ct.CategoryTypeId = c.CategoryTypeId
+    ORDER BY ct.DisplayOrder, c.DisplayOrder, c.CategoryName;
+END
+GO
+
+-- sp_GetCategoryOptionsByTypeName
+CREATE OR ALTER PROCEDURE sp_GetCategoryOptionsByTypeName
+    @CategoryTypeName NVARCHAR(100)
+AS
+BEGIN
+    SELECT c.CategoryId AS Id,
+           c.CategoryName AS Name,
+           c.Code
+    FROM Categories c
+    JOIN CategoryTypes ct ON ct.CategoryTypeId = c.CategoryTypeId
+    WHERE ct.CategoryTypeName = @CategoryTypeName
+      AND c.IsActive = 1
+    ORDER BY c.DisplayOrder, c.CategoryName;
+END
+GO
+
+-- sp_UpdateCategory
+CREATE OR ALTER PROCEDURE sp_UpdateCategory
+    @CategoryId INT,
+    @CategoryTypeId INT,
+    @CategoryName NVARCHAR(150),
+    @Code NVARCHAR(30),
+    @Description NVARCHAR(255),
+    @IsActive BIT,
+    @DisplayOrder INT
+AS
+BEGIN
+    UPDATE Categories
+    SET CategoryTypeId = @CategoryTypeId,
+        CategoryName = @CategoryName,
+        Code = @Code,
+        Description = @Description,
+        IsActive = @IsActive,
+        DisplayOrder = @DisplayOrder
+    WHERE CategoryId = @CategoryId;
+END
+GO
+
+-- sp_DeleteCategory
+CREATE OR ALTER PROCEDURE sp_DeleteCategory
+    @CategoryId INT
+AS
+BEGIN
+    DELETE FROM Categories WHERE CategoryId = @CategoryId;
+END
+GO
+
+-------------------------------------------------------------------------------
 -- ASSIGNMENT PROCEDURES
 -------------------------------------------------------------------------------
 

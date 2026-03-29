@@ -1,0 +1,459 @@
+@{
+    ViewData["Title"] = "User Role Assignment";
+    ViewData["IsGridPage"] = true;
+}
+
+<div class="container-fluid p-2 grid-page">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-primary"><i class="fas fa-user-check me-2"></i>User Role Assignment</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="patient-table-actions">
+                <div class="searchbar" style="display:inline-block;">
+                    <div class="searchbar-wrapper">
+                        <div class="searchbar-left">
+                            <div class="search-icon-wrapper">
+                                <span class="search-icon searchbar-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="searchbar-center">
+                            <div class="searchbar-input-spacer"></div>
+                            <input type="text" id="assignmentUserSearch" class="searchbar-input" maxlength="2048" autocapitalize="off" autocomplete="off" title="Search" role="combobox" placeholder="Search users...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-2 sb-assignment-body">
+        <div class="col-lg-4 d-flex">
+            <div class="patient-table-responsive shadow-sm grid-card w-100">
+                <div class="sb-assignment-card-header">
+                    <div class="sb-assignment-card-title"><i class="fas fa-users"></i>Users</div>
+                </div>
+                <div class="grid-table-wrap">
+                    <table class="patient-table" id="usersPickTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Username</th>
+                                <th style="width: 60%;">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in ViewBag.Users)
+                            {
+                                <tr id="userRow_@user.UserId" class="sb-assignment-user-row" onclick="selectUser(@user.UserId, '@user.Username', this)">
+                                    <td><i class="fas fa-user-circle text-muted me-2"></i><span class="fw-bold text-dark">@user.Username</span></td>
+                                    <td><span class="text-muted">@user.Email</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="patient-table-pagination-bar">
+                    <div class="pagination-info">
+                        Showing <span id="usersShownCount">0</span> users
+                    </div>
+                    <div class="pagination-controls">
+                        <select class="page-size-selector" id="usersPageSize">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="-1">All</option>
+                        </select>
+                        <div class="button-container">
+                            <button class="button-3d" id="usersPrevBtn" type="button">
+                                <div class="button-top">&#10094;</div>
+                                <div class="button-bottom"></div>
+                                <div class="button-base"></div>
+                            </button>
+                            <span class="page-number" id="usersPageNumber">Page 1 of 1</span>
+                            <button class="button-3d" id="usersNextBtn" type="button">
+                                <div class="button-top">&#10095;</div>
+                                <div class="button-bottom"></div>
+                                <div class="button-base"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 d-flex">
+            <div id="userAssignmentPanels" class="w-100 d-none sb-userroles-panels">
+                <div class="row g-2 w-100 sb-userroles-row">
+                    <div class="col-xl-6 d-flex">
+                        <div id="roleAssignmentCard" class="patient-table-responsive shadow-sm grid-card w-100">
+                            <div class="sb-assignment-card-header">
+                                <div class="sb-assignment-card-title">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Roles for <span id="selectedUsername" class="sb-assignment-selected-user"></span>
+                                </div>
+                            </div>
+                            <div class="grid-table-wrap">
+                                <table class="patient-table" id="rolesAssignTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 35%;">Role</th>
+                                            <th style="width: 55%;">Description</th>
+                                            <th style="width: 10%;">Select</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var role in ViewBag.Roles)
+                                        {
+                                            <tr class="sb-assignment-role-row" data-role-id="@role.RoleId" onclick="pickRole(@role.RoleId, this)">
+                                                <td><i class="fas fa-shield-alt text-muted me-2"></i><span class="fw-bold text-dark">@role.RoleName</span></td>
+                                                <td><span class="text-muted">@role.Description</span></td>
+                                                <td class="text-end">
+                                                    <div class="form-check sb-assignment-switch sb-radio">
+                                                        <input class="form-check-input role-radio" type="radio" name="userRoleRadio" id="role_@role.RoleId" value="@role.RoleId" onchange="setUserRole(@role.RoleId)" onclick="event.stopPropagation();">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="patient-table-pagination-bar">
+                                <div class="pagination-info">
+                                    Showing <span id="assignShownCount">0</span> roles
+                                </div>
+                                <div class="pagination-controls">
+                                    <select class="page-size-selector" id="assignPageSize">
+                                        <option value="15" selected>15</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="-1">All</option>
+                                    </select>
+                                    <div class="button-container">
+                                        <button class="button-3d" id="assignPrevBtn" type="button">
+                                            <div class="button-top">&#10094;</div>
+                                            <div class="button-bottom"></div>
+                                            <div class="button-base"></div>
+                                        </button>
+                                        <span class="page-number" id="assignPageNumber">Page 1 of 1</span>
+                                        <button class="button-3d" id="assignNextBtn" type="button">
+                                            <div class="button-top">&#10095;</div>
+                                            <div class="button-bottom"></div>
+                                            <div class="button-base"></div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 d-flex">
+                        <div id="effectiveMenusCard" class="patient-table-responsive shadow-sm grid-card w-100">
+                            <div class="sb-assignment-card-header">
+                                <div class="sb-assignment-card-title">
+                                    <i class="fas fa-list-check"></i>
+                                    Effective Menus
+                                </div>
+                            </div>
+                            <div class="grid-table-wrap">
+                                <table class="patient-table" id="effectiveMenusTable">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50%;">Menu</th>
+                                            <th style="width: 50%;">Route</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="effectiveMenusTbody">
+                                        <tr>
+                                            <td colspan="2" class="text-center text-muted py-4">Select a user to view menus.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="patient-table-pagination-bar">
+                                <div class="pagination-info">
+                                    Showing <span id="menusShownCount">0</span> menus
+                                </div>
+                                <div class="pagination-controls">
+                                    <select class="page-size-selector" id="menusPageSize">
+                                        <option value="10" selected>10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="-1">All</option>
+                                    </select>
+                                    <div class="button-container">
+                                        <button class="button-3d" id="menusPrevBtn" type="button">
+                                            <div class="button-top">&#10094;</div>
+                                            <div class="button-bottom"></div>
+                                            <div class="button-base"></div>
+                                        </button>
+                                        <span class="page-number" id="menusPageNumber">Page 1 of 1</span>
+                                        <button class="button-3d" id="menusNextBtn" type="button">
+                                            <div class="button-top">&#10095;</div>
+                                            <div class="button-bottom"></div>
+                                            <div class="button-base"></div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="noUserSelected" class="patient-table-responsive shadow-sm grid-card w-100">
+                <div class="sb-assignment-placeholder">
+                    <div>
+                        <div class="icon"><i class="fas fa-user-shield"></i></div>
+                        <h4 class="fw-bold text-dark">No User Selected</h4>
+                        <p class="text-muted mb-0">Select a user from the left to manage role assignments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentUserId = 0;
+        let usersPage = 1;
+        let assignPage = 1;
+        let menusPage = 1;
+        let effectiveMenus = [];
+        let selectedRoleId = 0;
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function selectUser(userId, username, rowEl) {
+            currentUserId = userId;
+            $('#selectedUsername').text(username);
+            $('#noUserSelected').addClass('d-none');
+            $('#userAssignmentPanels').removeClass('d-none');
+            $('#usersPickTable tbody tr').removeClass('sb-selected');
+            if (rowEl) $(rowEl).addClass('sb-selected');
+            ensureUserRowVisible(rowEl);
+
+            $('.role-radio').prop('checked', false);
+            $('#rolesAssignTable tbody tr').removeClass('sb-selected');
+            selectedRoleId = 0;
+            effectiveMenus = [];
+            menusPage = 1;
+            renderEffectiveMenus(true);
+
+            $.get('/Security/Assignments/GetUserRoles?userId=' + userId, function (response) {
+                if (response.success && response.data) {
+                    // Single-role UI: if multiple exist in DB, pick the first
+                    var first = (response.data && response.data.length) ? response.data[0] : null;
+                    if (first) {
+                        selectedRoleId = first.roleId;
+                        $('#role_' + first.roleId).prop('checked', true);
+                        highlightRoleRow(first.roleId);
+                    }
+                }
+                loadEffectiveMenus(userId);
+            });
+        }
+
+        function highlightRoleRow(roleId) {
+            $('#rolesAssignTable tbody tr').removeClass('sb-selected');
+            if (!roleId) return;
+            $('#rolesAssignTable tbody tr[data-role-id=\"' + roleId + '\"]').addClass('sb-selected');
+        }
+
+        function pickRole(roleId, rowEl) {
+            if (!currentUserId) return;
+            var radio = document.getElementById('role_' + roleId);
+            if (radio) radio.click(); // triggers onchange -> setUserRole
+        }
+
+        function setUserRole(roleId) {
+            if (!currentUserId) return;
+            if (selectedRoleId === roleId) {
+                highlightRoleRow(roleId);
+                return;
+            }
+
+            var prev = selectedRoleId;
+            selectedRoleId = roleId;
+            highlightRoleRow(roleId);
+            $.post('/Security/Assignments/SetUserRole', { userId: currentUserId, roleId: roleId }, function (response) {
+                if (!response || !response.success) {
+                    if (window.SBToast) window.SBToast.error((response && response.message) ? response.message : 'Update failed.');
+                    // Re-load from server to restore correct selection
+                    $.get('/Security/Assignments/GetUserRoles?userId=' + currentUserId, function (r2) {
+                        $('.role-radio').prop('checked', false);
+                        $('#rolesAssignTable tbody tr').removeClass('sb-selected');
+                        var first = (r2 && r2.success && r2.data && r2.data.length) ? r2.data[0] : null;
+                        selectedRoleId = first ? first.roleId : 0;
+                        if (first) {
+                            $('#role_' + first.roleId).prop('checked', true);
+                            highlightRoleRow(first.roleId);
+                        }
+                    });
+                    selectedRoleId = prev;
+                    return;
+                }
+                loadEffectiveMenus(currentUserId);
+            });
+        }
+
+        function loadEffectiveMenus(userId) {
+            if (!userId) return;
+            $('#effectiveMenusTbody').html('<tr><td colspan="2" class="text-center text-muted py-4">Loading...</td></tr>');
+            $.get('/Security/Assignments/GetUserMenus?userId=' + userId, function (response) {
+                if (response && response.success && response.data) {
+                    effectiveMenus = response.data || [];
+                } else {
+                    effectiveMenus = [];
+                }
+                renderEffectiveMenus(true);
+            });
+        }
+
+        function renderEffectiveMenus(resetToFirstPage) {
+            var pageSizeRaw = parseInt($('#menusPageSize').val() || '10', 10);
+            var pageSize = isNaN(pageSizeRaw) ? 10 : pageSizeRaw;
+            if (resetToFirstPage) menusPage = 1;
+
+            var total = effectiveMenus.length;
+            var totalPages = pageSize > 0 ? Math.max(1, Math.ceil(total / pageSize)) : 1;
+            menusPage = Math.min(Math.max(1, menusPage), totalPages);
+
+            var visible = effectiveMenus;
+            if (pageSize > 0) {
+                var start = (menusPage - 1) * pageSize;
+                visible = effectiveMenus.slice(start, start + pageSize);
+            }
+
+            if (!currentUserId) {
+                $('#effectiveMenusTbody').html('<tr><td colspan="2" class="text-center text-muted py-4">Select a user to view menus.</td></tr>');
+                $('#menusShownCount').text('0');
+                $('#menusPageNumber').text('Page 1 of 1');
+                $('#menusPrevBtn').prop('disabled', true);
+                $('#menusNextBtn').prop('disabled', true);
+                return;
+            }
+
+            if (total === 0) {
+                $('#effectiveMenusTbody').html('<tr><td colspan="2" class="text-center text-muted py-4">No menus (based on assigned roles).</td></tr>');
+            } else {
+                var html = '';
+                visible.forEach(function (m) {
+                    var name = escapeHtml(m.menuName);
+                    var route = escapeHtml(m.route || '-');
+                    html += '<tr><td><span class="fw-semibold text-dark">' + name + '</span></td><td><span class="text-muted">' + route + '</span></td></tr>';
+                });
+                $('#effectiveMenusTbody').html(html);
+            }
+
+            $('#menusShownCount').text(visible.length);
+            $('#menusPageNumber').text('Page ' + menusPage + ' of ' + totalPages);
+            $('#menusPrevBtn').prop('disabled', menusPage <= 1);
+            $('#menusNextBtn').prop('disabled', menusPage >= totalPages);
+        }
+
+        function getFilteredUserRows() {
+            var q = (($('#assignmentUserSearch').val() || '') + '').toLowerCase();
+            var rows = $('#usersPickTable tbody tr').toArray();
+            if (!q) return rows;
+            return rows.filter(function (tr) {
+                var txt = ($(tr).text() || '').toLowerCase();
+                return txt.indexOf(q) > -1;
+            });
+        }
+
+        function applyUsersPagination(resetToFirstPage) {
+            var rows = getFilteredUserRows();
+            var pageSizeRaw = parseInt($('#usersPageSize').val() || '10', 10);
+            var pageSize = isNaN(pageSizeRaw) ? 10 : pageSizeRaw;
+
+            if (resetToFirstPage) usersPage = 1;
+
+            var total = rows.length;
+            var totalPages = pageSize > 0 ? Math.max(1, Math.ceil(total / pageSize)) : 1;
+            usersPage = Math.min(Math.max(1, usersPage), totalPages);
+
+            // Hide all then show filtered slice
+            $('#usersPickTable tbody tr').hide();
+            var visible = rows;
+            if (pageSize > 0) {
+                var start = (usersPage - 1) * pageSize;
+                visible = rows.slice(start, start + pageSize);
+            }
+            visible.forEach(function (tr) { $(tr).show(); });
+
+            $('#usersShownCount').text(visible.length);
+            $('#usersPageNumber').text('Page ' + usersPage + ' of ' + totalPages);
+            $('#usersPrevBtn').prop('disabled', usersPage <= 1);
+            $('#usersNextBtn').prop('disabled', usersPage >= totalPages);
+        }
+
+        function ensureUserRowVisible(rowEl) {
+            if (!rowEl) return;
+            var rows = getFilteredUserRows();
+            var idx = rows.indexOf(rowEl);
+            if (idx < 0) return;
+            var pageSizeRaw = parseInt($('#usersPageSize').val() || '10', 10);
+            var pageSize = isNaN(pageSizeRaw) ? 10 : pageSizeRaw;
+            if (pageSize <= 0) return;
+            usersPage = Math.floor(idx / pageSize) + 1;
+            applyUsersPagination(false);
+        }
+
+        function applyAssignPagination(resetToFirstPage) {
+            var rows = $('#rolesAssignTable tbody tr').toArray();
+            var pageSizeRaw = parseInt($('#assignPageSize').val() || '15', 10);
+            var pageSize = isNaN(pageSizeRaw) ? 15 : pageSizeRaw;
+
+            if (resetToFirstPage) assignPage = 1;
+
+            var total = rows.length;
+            var totalPages = pageSize > 0 ? Math.max(1, Math.ceil(total / pageSize)) : 1;
+            assignPage = Math.min(Math.max(1, assignPage), totalPages);
+
+            $('#rolesAssignTable tbody tr').hide();
+            var visible = rows;
+            if (pageSize > 0) {
+                var start = (assignPage - 1) * pageSize;
+                visible = rows.slice(start, start + pageSize);
+            }
+            visible.forEach(function (tr) { $(tr).show(); });
+
+            $('#assignShownCount').text(visible.length);
+            $('#assignPageNumber').text('Page ' + assignPage + ' of ' + totalPages);
+            $('#assignPrevBtn').prop('disabled', assignPage <= 1);
+            $('#assignNextBtn').prop('disabled', assignPage >= totalPages);
+        }
+
+        $('#assignmentUserSearch').on('keyup', function () { applyUsersPagination(true); });
+        $('#usersPageSize').on('change', function () { applyUsersPagination(true); });
+        $('#assignPageSize').on('change', function () { applyAssignPagination(true); });
+        $('#menusPageSize').on('change', function () { renderEffectiveMenus(true); });
+
+        $('#usersPrevBtn').on('click', function () { usersPage = Math.max(1, usersPage - 1); applyUsersPagination(false); });
+        $('#usersNextBtn').on('click', function () { usersPage = usersPage + 1; applyUsersPagination(false); });
+
+        $('#assignPrevBtn').on('click', function () { assignPage = Math.max(1, assignPage - 1); applyAssignPagination(false); });
+        $('#assignNextBtn').on('click', function () { assignPage = assignPage + 1; applyAssignPagination(false); });
+
+        $('#menusPrevBtn').on('click', function () { menusPage = Math.max(1, menusPage - 1); renderEffectiveMenus(false); });
+        $('#menusNextBtn').on('click', function () { menusPage = menusPage + 1; renderEffectiveMenus(false); });
+
+        $(document).ready(function () {
+            applyUsersPagination(true);
+            applyAssignPagination(true);
+            renderEffectiveMenus(true);
+        });
+    </script>
+}

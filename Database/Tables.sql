@@ -42,6 +42,39 @@ BEGIN
 END
 GO
 
+-- CategoryTypes Table
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'CategoryTypes')
+BEGIN
+    CREATE TABLE CategoryTypes (
+        CategoryTypeId INT PRIMARY KEY IDENTITY(1,1),
+        CategoryTypeName NVARCHAR(100) NOT NULL,
+        Description NVARCHAR(255) NULL,
+        IsActive BIT NOT NULL DEFAULT 1,
+        DisplayOrder INT NOT NULL DEFAULT 0,
+        CreatedDate DATETIME NOT NULL DEFAULT GETDATE()
+    );
+    CREATE INDEX IX_CategoryTypes_Name ON CategoryTypes(CategoryTypeName);
+END
+GO
+
+-- Categories Table
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Categories')
+BEGIN
+    CREATE TABLE Categories (
+        CategoryId INT PRIMARY KEY IDENTITY(1,1),
+        CategoryTypeId INT NOT NULL FOREIGN KEY REFERENCES CategoryTypes(CategoryTypeId),
+        CategoryName NVARCHAR(150) NOT NULL,
+        Code NVARCHAR(30) NULL,
+        Description NVARCHAR(255) NULL,
+        IsActive BIT NOT NULL DEFAULT 1,
+        DisplayOrder INT NOT NULL DEFAULT 0,
+        CreatedDate DATETIME NOT NULL DEFAULT GETDATE()
+    );
+    CREATE INDEX IX_Categories_Name ON Categories(CategoryName);
+    CREATE INDEX IX_Categories_CategoryTypeId ON Categories(CategoryTypeId);
+END
+GO
+
 -- UserRoles Table (Mapping)
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'UserRoles')
 BEGIN
