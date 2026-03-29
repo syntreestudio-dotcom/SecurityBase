@@ -1,0 +1,405 @@
+@using SecurityBase.Mvc.Helpers
+@{
+    ViewData["Title"] = "Category Management";
+    var permissions = MenuPermissionHelper.GetMenuPermissions(Context, "/Security/Categories/Index");
+}
+
+<div class="container-fluid p-2 grid-page">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-primary"><i class="fas fa-folder-tree me-2"></i>Category Management</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="patient-table-actions">
+                <div class="searchbar" style="display:inline-block;">
+                    <div class="searchbar-wrapper">
+                        <div class="searchbar-left">
+                            <div class="search-icon-wrapper">
+                                <span class="search-icon searchbar-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="searchbar-center">
+                            <div class="searchbar-input-spacer"></div>
+                            <input type="text" id="categorySearch" class="searchbar-input" maxlength="2048" autocapitalize="off" autocomplete="off" title="Search" role="combobox" placeholder="Search categories...">
+                        </div>
+                    </div>
+                </div>
+                <select id="categoryTypeFilter" class="page-size-selector ms-2" style="min-width: 220px;">
+                    <option value="">All category types</option>
+                </select>
+                <button class="button" type="button"><i class="fa-solid fa-file-export pe-1"></i> Export</button>
+                @if (permissions.CanCreate)
+                {
+                    <button class="button" type="button" onclick="openCreateModal()">
+                        <i class="fa-solid fa-plus pe-1"></i> Add Category
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="patient-table-responsive shadow-sm grid-card">
+        <div class="grid-table-wrap">
+            <table class="patient-table" id="categoriesTable">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Category Name</th>
+                        <th style="width: 20%;">Type</th>
+                        <th style="width: 15%;">Code</th>
+                        <th style="width: 10%;">Order</th>
+                        <th style="width: 15%;">Status</th>
+                        @if (permissions.CanEdit || permissions.CanDelete)
+                        {
+                            <th style="width: 15%;" class="cell-actions">Actions</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="@(permissions.CanEdit || permissions.CanDelete ? 6 : 5)" class="text-center p-5">
+                            <div class="text-muted">
+                                <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                                <p class="mb-0">Loading categories...</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="patient-table-pagination-bar">
+            <div class="pagination-info">
+                Showing <span id="categoriesShownCount">0</span> entries
+            </div>
+            <div class="pagination-controls">
+                <select class="page-size-selector" id="categoriesPageSize">
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="-1">All</option>
+                </select>
+                <button class="button-3d" onclick="loadCategories()" title="Refresh">
+                    <div class="button-top">
+                        <span class="material-icons"><i class="fas fa-sync-alt m-0"></i></span>
+                    </div>
+                    <div class="button-bottom"></div>
+                    <div class="button-base"></div>
+                </button>
+                <div class="button-container">
+                    <button class="button-3d" disabled>
+                        <div class="button-top">&#10094;</div>
+                        <div class="button-bottom"></div>
+                        <div class="button-base"></div>
+                    </button>
+                    <span class="page-number">Page 1 of 1</span>
+                    <button class="button-3d" disabled>
+                        <div class="button-top">&#10095;</div>
+                        <div class="button-bottom"></div>
+                        <div class="button-base"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade sb-modal" id="categoryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header sb-form-modal-header">
+                <div>
+                    <h5 class="modal-title" id="categoryModalTitle">Add Category</h5>
+                    <div class="sb-form-modal-subtitle">Create or update a category</div>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close" data-sb-modal-close></button>
+            </div>
+            <div class="modal-body p-4 sb-form-modal-body">
+                <form id="categoryForm" class="sb-form" novalidate>
+                    <input type="hidden" id="categoryId" name="CategoryId" value="0" />
+                    <div class="form-section mb-0">
+                        <div class="section-title">
+                            <i class="fas fa-folder-open section-icon"></i>
+                            Category Details
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label">
+                                    Category Name <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-folder input-icon"></i>
+                                    <input type="text" id="categoryName" name="CategoryName" class="form-control" placeholder="Category name" required />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">
+                                    Category Type <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-list input-icon"></i>
+                                    <select id="categoryTypeId" name="CategoryTypeId" class="form-select" required>
+                                        <option value="">Select category type</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Code</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-hashtag input-icon"></i>
+                                    <input type="text" id="categoryCode" name="Code" class="form-control" placeholder="Optional code" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Display Order</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-sort-numeric-down input-icon"></i>
+                                    <input type="number" id="categoryDisplayOrder" name="DisplayOrder" class="form-control" value="0" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Description</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-align-left input-icon"></i>
+                                    <input type="text" id="categoryDescription" name="Description" class="form-control" placeholder="Short description" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Status</label>
+                                <div class="form-check form-switch p-3 bg-light rounded-3 mb-0">
+                                    <input type="checkbox" id="categoryIsActive" name="IsActive" value="true" class="form-check-input ms-0" checked />
+                                    <input type="hidden" id="categoryIsActiveHidden" name="IsActive" value="false" />
+                                    <label class="form-check-label ms-2 fw-bold" for="categoryIsActive">Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer sb-form-actions">
+                <div class="sb-form w-100 d-flex justify-content-end align-items-center gap-2">
+                    <button type="button" class="btn-cancel" data-sb-modal-close>
+                        <span>CANCEL</span>
+                    </button>
+                    <button type="button" class="btn-save" onclick="saveCategory()">
+                        <span class="shadow"></span>
+                        <span class="edge"></span>
+                        <span class="front"><span>SAVE</span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var allCategories = [];
+        var allCategoryTypes = [];
+        var canEdit = @(permissions.CanEdit ? "true" : "false");
+        var canDelete = @(permissions.CanDelete ? "true" : "false");
+        var hasActions = canEdit || canDelete;
+        var colSpan = hasActions ? 6 : 5;
+
+        function loadCategoryTypesForDropdown(selectedId) {
+            if (window.SBCategoryDropdowns && window.SBCategoryDropdowns.loadCategoryTypes) {
+                return window.SBCategoryDropdowns.loadCategoryTypes('#categoryTypeId', selectedId, {
+                    includeEmpty: true,
+                    emptyLabel: 'Select category type'
+                });
+            }
+            return $.get('/Security/CategoryTypes/GetCategoryTypeOptions', function (response) {
+                allCategoryTypes = response.data || [];
+                var $ddl = $('#categoryTypeId');
+                $ddl.empty();
+                $ddl.append('<option value="">Select category type</option>');
+                (allCategoryTypes || []).forEach(function (t) {
+                    var id = t.id || t.Id || 0;
+                    var name = t.name || t.Name || ('Type ' + id);
+                    $ddl.append('<option value="' + id + '">' + $('<span>').text(name).html() + '</option>');
+                });
+                if (selectedId != null && String(selectedId) !== '') {
+                    $ddl.val(String(selectedId));
+                }
+            });
+        }
+
+        function loadCategories() {
+            $.ajax({
+                url: '/Security/Categories/GetAllCategories',
+                type: 'GET',
+                success: function (response) {
+                    allCategories = response.data || [];
+                    applyCategoriesGrid();
+                },
+                error: function () {
+                    $('#categoriesTable tbody').html('<tr><td colspan="' + colSpan + '" class="text-center p-5"><div class="text-muted"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Failed to load categories.</p></div></td></tr>');
+                }
+            });
+        }
+
+        function renderCategoriesTable(items) {
+            var $tbody = $('#categoriesTable tbody');
+            $tbody.empty();
+
+            if (!items || items.length === 0) {
+                $tbody.html('<tr><td colspan="' + colSpan + '" class="text-center p-5"><div class="text-muted"><i class="fas fa-search fa-2x mb-3"></i><p class="mb-0">No categories found.</p></div></td></tr>');
+                return;
+            }
+
+            $.each(items, function (i, item) {
+                var id = item.categoryId || item.CategoryId || 0;
+                var name = item.categoryName || item.CategoryName || '';
+                var typeName = item.categoryTypeName || item.CategoryTypeName || '';
+                var code = item.code || item.Code || '';
+                var isActive = (item.isActive != null ? item.isActive : item.IsActive) ? true : false;
+                var order = item.displayOrder != null ? item.displayOrder : (item.DisplayOrder != null ? item.DisplayOrder : 0);
+
+                var row = '<tr>';
+                row += '<td><i class="fas fa-folder text-warning me-2"></i><span class="fw-bold text-dark">' + $('<span>').text(name).html() + '</span></td>';
+                row += '<td>' + $('<span>').text(typeName).html() + '</td>';
+                row += '<td><code class="text-primary">' + $('<span>').text(code).html() + '</code></td>';
+                row += '<td><span class="badge bg-light text-dark">' + order + '</span></td>';
+                row += '<td><span class="patient-badge patient-badge-' + (isActive ? 'success' : 'secondary') + '">' + (isActive ? 'Active' : 'Inactive') + '</span></td>';
+
+                if (hasActions) {
+                    row += '<td class="cell-actions">';
+                    if (canEdit) {
+                        row += '<button onclick=\'editCategory(' + JSON.stringify(item) + ')\' class="patient-table-action patient-table-edit" title="Edit"><i class="fas fa-edit"></i></button>';
+                    }
+                    if (canDelete) {
+                        row += '<button onclick="deleteCategory(' + id + ')" class="patient-table-action patient-table-delete" title="Delete"><i class="fas fa-trash"></i></button>';
+                    }
+                    row += '</td>';
+                }
+                row += '</tr>';
+                $tbody.append(row);
+            });
+        }
+
+        function applyCategoriesGrid() {
+            var query = (($('#categorySearch').val() || '') + '').toLowerCase();
+            var filterTypeId = $('#categoryTypeFilter').val() || '';
+            var pageSizeRaw = parseInt($('#categoriesPageSize').val() || '10', 10);
+            var pageSize = isNaN(pageSizeRaw) ? 10 : pageSizeRaw;
+
+            var filtered = allCategories.filter(function (m) {
+                if (!query) return true;
+                var text = ((m.categoryName || m.CategoryName || '') + ' ' + (m.categoryTypeName || m.CategoryTypeName || '') + ' ' + (m.code || m.Code || '')).toLowerCase();
+                return text.indexOf(query) > -1;
+            });
+
+            if (filterTypeId) {
+                filtered = filtered.filter(function (m) {
+                    var tid = m.categoryTypeId != null ? m.categoryTypeId : m.CategoryTypeId;
+                    return String(tid) === String(filterTypeId);
+                });
+            }
+
+            if (pageSize > 0) {
+                filtered = filtered.slice(0, pageSize);
+            }
+
+            renderCategoriesTable(filtered);
+            $('#categoriesShownCount').text(filtered.length);
+        }
+
+        function openCreateModal() {
+            $('#categoryForm')[0].reset();
+            $('#categoryId').val(0);
+            $('#categoryModalTitle').text('Add Category');
+            $('#categoryIsActive').prop('checked', true);
+            updateCategoryIsActiveHidden();
+            loadCategoryTypesForDropdown('');
+            $('#categoryModal').modal('show');
+        }
+
+        function editCategory(item) {
+            var id = item.categoryId || item.CategoryId || 0;
+            var name = item.categoryName || item.CategoryName || '';
+            var typeId = item.categoryTypeId || item.CategoryTypeId || '';
+            var code = item.code || item.Code || '';
+            var desc = item.description || item.Description || '';
+            var isActive = (item.isActive != null ? item.isActive : item.IsActive) ? true : false;
+            var order = item.displayOrder != null ? item.displayOrder : (item.DisplayOrder != null ? item.DisplayOrder : 0);
+
+            $('#categoryModalTitle').text('Edit Category');
+            $('#categoryId').val(id);
+            $('#categoryName').val(name);
+            $('#categoryCode').val(code);
+            $('#categoryDescription').val(desc);
+            $('#categoryDisplayOrder').val(order);
+            $('#categoryIsActive').prop('checked', !!isActive);
+            updateCategoryIsActiveHidden();
+            loadCategoryTypesForDropdown(typeId);
+            $('#categoryModal').modal('show');
+        }
+
+        function updateCategoryIsActiveHidden() {
+            var isChecked = !!$('#categoryIsActive').is(':checked');
+            $('#categoryIsActiveHidden').prop('disabled', isChecked);
+        }
+
+        function saveCategory() {
+            if (window.SBFormValidation && !window.SBFormValidation.validateCategoryForm()) return;
+            var formData = $('#categoryForm').serialize();
+
+            $.post('/Security/Categories/SaveCategory', formData, function (response) {
+                if (response && response.success) {
+                    if (window.SBToast) window.SBToast.success((response.message || 'Saved.'));
+                    if (window.SBModalDirtyGuard) window.SBModalDirtyGuard.allowCloseOnce('categoryModal');
+                    loadCategories();
+                    $('#categoryModal').modal('hide');
+                } else {
+                    if (window.SBToast) window.SBToast.error((response && response.message) ? response.message : 'Save failed.');
+                }
+            });
+        }
+
+        function deleteCategory(id) {
+            if (!window.SBToast || !window.SBToast.confirm) return;
+
+            window.SBToast.confirm({ title: 'Delete category', message: "Delete this category?", variant: 'danger', confirmText: 'Delete' })
+                .then(function (ok) {
+                    if (!ok) return;
+                    $.ajax({
+                        url: '/Security/Categories/DeleteCategory/' + id,
+                        type: 'DELETE',
+                        success: function (response) {
+                            if (response && response.success) {
+                                window.SBToast.success((response.message || 'Deleted.'));
+                                loadCategories();
+                            } else {
+                                window.SBToast.error((response && response.message) ? response.message : 'Delete failed.');
+                            }
+                        }
+                    });
+                });
+        }
+
+        $('#categorySearch').on('keyup', applyCategoriesGrid);
+        $('#categoriesPageSize').on('change', applyCategoriesGrid);
+        $('#categoryTypeFilter').on('change', applyCategoriesGrid);
+        $(document).ready(function () {
+            if (window.SBModalDirtyGuard) window.SBModalDirtyGuard.attach({ modalId: 'categoryModal', formId: 'categoryForm' });
+            $('#categoryIsActive').on('change', updateCategoryIsActiveHidden);
+            updateCategoryIsActiveHidden();
+            var urlParams = new URLSearchParams(window.location.search || '');
+            var typeIdParam = urlParams.get('typeId') || '';
+            var typeNameParam = urlParams.get('typeName') || '';
+
+            if (window.SBCategoryDropdowns && window.SBCategoryDropdowns.loadCategoryTypes) {
+                window.SBCategoryDropdowns.loadCategoryTypes('#categoryTypeFilter', typeIdParam, {
+                    includeEmpty: true,
+                    emptyLabel: 'All category types'
+                });
+            }
+
+            loadCategories();
+        });
+    </script>
+}

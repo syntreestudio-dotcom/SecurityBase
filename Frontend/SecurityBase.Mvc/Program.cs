@@ -19,7 +19,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Security/Home/Error");
     app.UseHsts();
 }
 
@@ -32,7 +32,17 @@ app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
+    name: "root-login",
+    pattern: "",
+    defaults: new { area = "Security", controller = "Account", action = "Login" });
+
+app.MapControllerRoute(
+    name: "login",
+    pattern: "Account/{action=Login}/{id?}",
+    defaults: new { area = "Security", controller = "Account", action = "Login" });
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

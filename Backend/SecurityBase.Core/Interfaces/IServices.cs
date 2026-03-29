@@ -33,6 +33,24 @@ public interface IMenuService
     Task<ApiResponse<bool>> DeleteMenuAsync(int menuId);
 }
 
+public interface ICategoryTypeService
+{
+    Task<ApiResponse<int>> CreateCategoryTypeAsync(CategoryType categoryType);
+    Task<ApiResponse<IEnumerable<CategoryType>>> GetCategoryTypesAsync();
+    Task<ApiResponse<IEnumerable<DropdownItemDto>>> GetCategoryTypeOptionsAsync();
+    Task<ApiResponse<bool>> UpdateCategoryTypeAsync(CategoryType categoryType);
+    Task<ApiResponse<bool>> DeleteCategoryTypeAsync(int categoryTypeId);
+}
+
+public interface ICategoryService
+{
+    Task<ApiResponse<int>> CreateCategoryAsync(Category category);
+    Task<ApiResponse<IEnumerable<CategoryDto>>> GetCategoriesAsync();
+    Task<ApiResponse<IEnumerable<DropdownItemDto>>> GetCategoryOptionsByTypeAsync(string categoryTypeName);
+    Task<ApiResponse<bool>> UpdateCategoryAsync(Category category);
+    Task<ApiResponse<bool>> DeleteCategoryAsync(int categoryId);
+}
+
 public interface IAssignmentService
 {
     Task<ApiResponse<bool>> AssignRoleToUserAsync(int userId, int roleId);

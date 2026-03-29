@@ -193,6 +193,16 @@ body.is-grid-page #content.main-content main[role="main"] {
     line-height: 1.2;
 }
 
+.patient-table .cell-actions {
+    white-space: nowrap;
+    min-width: 120px;
+}
+
+.patient-table .cell-actions .button {
+    min-width: 88px;
+    justify-content: center;
+}
+
 .patient-table td code {
     font-size: 0.8rem;
 }

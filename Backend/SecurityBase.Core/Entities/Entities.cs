@@ -27,6 +27,28 @@ public class Menu
     public int DisplayOrder { get; set; }
 }
 
+public class CategoryType
+{
+    public int CategoryTypeId { get; set; }
+    public string CategoryTypeName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public bool IsActive { get; set; }
+    public int DisplayOrder { get; set; }
+    public DateTime CreatedDate { get; set; }
+}
+
+public class Category
+{
+    public int CategoryId { get; set; }
+    public int CategoryTypeId { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
+    public string? Code { get; set; }
+    public string? Description { get; set; }
+    public bool IsActive { get; set; }
+    public int DisplayOrder { get; set; }
+    public DateTime CreatedDate { get; set; }
+}
+
 public class UserRole
 {
     public int UserRoleId { get; set; }

@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<section class="dashboard-vanta-wrap">
+    <h1 class="dashboard-vanta-title">Welcome to Syntree</h1>
+</section>
+
+@section Styles {
+    <style>
+        .main-content > .container-fluid {
+            padding: 0 !important;
+        }
+
+        .main-content > .container-fluid > main {
+            padding-bottom: 0 !important;
+        }
+
+        .dashboard-vanta-wrap {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+            background: #ffffff;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: clamp(1.2rem, 2.6vw, 2.2rem);
+        }
+
+        .dashboard-vanta-title {
+            position: relative;
+            z-index: 1;
+            display: block;
+            width: 674.4px;
+            height: 86.4px;
+            margin: 0 0 15px 0;
+            padding: 0;
+            font-family: circular, "Segoe UI", sans-serif;
+            font-size: 60px;
+            font-weight: 500;
+            line-height: 86.4px;
+            letter-spacing: -2px;
+            word-spacing: 0;
+            text-align: left;
+            color: #2b2928;
+            transform: none;
+            transition: all 0.3s ease;
+        }
+
+        @@media (max-width: 1024px) {
+            .dashboard-vanta-wrap {
+                min-height: calc(100vh - 75px);
+            }
+
+            .dashboard-vanta-title {
+                width: calc(100% - 1.5rem);
+                height: auto;
+                font-size: clamp(2rem, 9vw, 3rem);
+                line-height: 1.2;
+            }
+        }
+    </style>
+}
